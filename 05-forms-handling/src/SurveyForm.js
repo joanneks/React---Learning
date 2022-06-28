@@ -6,7 +6,8 @@ export default class SurveyForm extends React.Component {
     state = {
         'name':'',
         'email':'',
-        'color':''
+        'color':'',
+        'country':'Singapore'
     }
 
     updateName = (event) =>{
@@ -29,6 +30,10 @@ export default class SurveyForm extends React.Component {
             'color': event.target.value
         })
     }
+    updateCountry = (event) =>
+    this.setState({
+        'country':event.target.value
+    })
     render() {
         return (
             <div>
@@ -75,6 +80,16 @@ export default class SurveyForm extends React.Component {
                         checked={this.state.color === "blue"}
                     />
                     <label className="form-check-label">Blue</label>
+                </div>
+                <div>
+                    <label>Country</label>
+                    <select className="form-control" value={this.state.country} onChange={this.updateCountry}>   
+                        <option value="singapore">Singapore</option>
+                        <option value="malaysia">Malaysia</option>
+                        <option value ="indonesia">Indonesia</option>
+                        
+                    </select>
+
                 </div>
             </div>
         )
