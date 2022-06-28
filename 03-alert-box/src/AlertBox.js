@@ -8,16 +8,16 @@ export default class AlertBox extends React.Component{
         "message":this.props.initialMessage,
         "count":this.props.initialValue,
         "showBox":"",
-        "noShowBox":"",
+        "number":this.props.number
     }
 
     TickleBox = () => {this.setState({
-        showBox: document.querySelector("#showBox").innerHTML= "that tickles!"
+        showBox: document.querySelector(".showBox").innerHTML= "that tickles!"
         })
     }
 
     NoTickleBox = () => {this.setState({
-        showBox: document.querySelector("#showBox").innerHTML= ""
+        showBox: document.querySelector(".showBox").innerHTML= ""
         })
     }
     
@@ -26,6 +26,14 @@ export default class AlertBox extends React.Component{
         this.setState({
             count: this.state.count + 1
         })
+    }
+
+    Increment = () => {
+        this.setState({number:this.state.number+1})
+    }
+
+    Decrement = () => {
+        this.setState({number:this.state.number-1})
     }
 
     // event handlers should always be arrow functions
@@ -42,13 +50,18 @@ export default class AlertBox extends React.Component{
                 }} onMouseEnter={this.TickleBox} onMouseLeave={this.NoTickleBox}> 
                 {this.state.message} 
                 </div>
-                <div id="showBox"></div>
+                <div className="showBox"></div>
                 <div style={{
                     "border": "solid black 4px",
                     "margin":"10px",
                     "width":"100px"
                 }} onClick={this.click}> 
                     {this.state.count}
+                </div>
+                <div>
+                    <button onClick={this.Increment}>+</button>
+                    <div>{this.state.number}</div>
+                    <button onClick={this.Decrement}>-</button>
                 </div>
             </div>
         )

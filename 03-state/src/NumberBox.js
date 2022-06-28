@@ -10,7 +10,7 @@ export default class NumberBox extends React.Component{
  //intended for data that is accessible by the component itself.
  // it is private data ,so no other components can access it or change it
  state ={
-    "count":10
+    "count":this.props.initialValue
  }
 
  render(){

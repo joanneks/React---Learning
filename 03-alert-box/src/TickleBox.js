@@ -1,19 +1,24 @@
 import React from 'react';
-export default TickleBox() {
-    const [isShown, setIsShown] = useState(false);
 
-    return (
-        <div className="App">
-        <button
-            onMouseEnter={() => setIsShown(true)}
-            onMouseLeave={() => setIsShown(false)}>
-            Hover over me!
-        </button>
-        {isShown && (
-            <div>
-            I'll appear when you hover over the button.
-            </div>
-        )}
-        </div>
-    );
+export default class TickleBox extends React.Component{
+    state={
+        'showMessage':'false'
+    }
+    tickles = () => {
+        this.setState({
+            'showMessage':'true'
+        })
+    }
+    untickles = () => {
+        this.setState({
+            'showMessage':'false'
+        })
+    }
+    render(){
+        return(
+            <div style={{"backgroundColor":"yellow", "width":"100px"}} 
+            onMouseEnter={this.tickles} onMouseLeave={this.untickles}>
+            {this.state.showMessage}</div>
+        )
+    }
 }

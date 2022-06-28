@@ -3,7 +3,8 @@ import NumberBox from './NumberBox';
 function App() {
   return (
     <div>
-      <NumberBox/>
+      <NumberBox initialValue={10}/>
+      <NumberBox initialValue={0}/>
     </div>
   );
 }
