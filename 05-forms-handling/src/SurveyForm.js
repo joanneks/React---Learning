@@ -8,7 +8,8 @@ export default class SurveyForm extends React.Component {
         'email':'',
         'color':'',
         'country':'Singapore',
-        'fruits':[]
+        'fruits':[],
+        'contacts':[]
     }
 
 // SOLUTION 1
@@ -110,8 +111,73 @@ export default class SurveyForm extends React.Component {
                 'fruits':[...this.state.fruits,event.target.value]
             })
         }
-
     }
+    updateContacts = (event) =>{
+         // is the checkbox that is being clicked on already checked or unchecked?
+         if (this.state.contacts.includes(event.target.value)) {
+            // the user is unchecking the checkbox
+            let indexToRemove = this.state.contacts.indexOf(event.target.value);
+
+            // 1. clone the array
+            let cloned = this.state.contacts.slice();
+            // 2. modify the cloned array (removing the element at indexToRemove)
+            cloned.splice(indexToRemove, 1);
+            // 3. replace the original array in the state with the cloned
+            this.setState({
+                'contacts': cloned
+            })
+
+
+        } else {
+            // the user is checking the checkbox
+            // 1. clone the array
+            let cloned = this.state.contacts.slice();
+            // 2. modify the cloned array
+            cloned.push(event.target.value);
+            // 3. replace the cloned array into the state
+            this.setState({
+                'contacts': cloned
+            })
+        }
+    }
+    getNameError = () => {
+        if (this.state.name.length < 3) {
+            return "The name must have more 3 or more characters"
+        } else if (this.state.name > 20) {
+            return "The name must not exceed 20 characters"
+        } else {
+            return null
+        }
+    }
+
+    getEmailError = () => {
+        if (this.state.email.includes('@') === false) {
+            return "The email is in the wrong format";
+        } else {
+            return null;
+        }
+    }
+    submit = ()=>{
+        if (!this.getNameError()){
+            alert("All data is Ok!")
+        }
+    }
+    
+    // enableSubmit = ()=> {
+    //     let condition1 = this.state.name || this.state.email || this.state.color
+    //     let condition2 = this.state.fruits
+    //     console.log(condition1)
+    //     console.log(condition2)
+    //     console.log(condition1 || condition2)
+    //     if(condition1 === false && condition2 === []){
+            
+    //         console.log("button disabled")
+    //         return true
+    //     }else{
+    //     console.log("button enabled")
+    //     return false
+    //     }
+    // }
 
     render() {
         return (
@@ -123,13 +189,16 @@ export default class SurveyForm extends React.Component {
                            value={this.state.name}
                            onChange={this.updateName}
                     />
+                    {this.getNameError() ? <span className="error">{this.getNameError()}</span> : ""}
                 </div>
                 <div>
-                    <label>Email:</label>
+                <label>Email:</label>
                     <input type="text"
-                    className="form-control"
-                    value={this.state.email}
-                    onChange={this.updateEmail}/>
+                           className="form-control"
+                           value={this.state.email}
+                           onChange={this.updateEmail}       
+                    />
+                    {this.getEmailError() ? <span className="error">{this.getEmailError()}</span> : ''}
                 </div>
                 <div>
                     <label>Favourite Color:</label>
@@ -179,7 +248,18 @@ export default class SurveyForm extends React.Component {
                     <input type="checkbox" className="form-check-input" name="fruits" value="durian" onChange={this.updateFruits}/>
                     <label>Durian</label>
 
+                </div> 
+                <div>
+                    <input type="checkbox" value="email" onChange={this.updateContacts} checked={this.state.contacts.includes('email')}/>
+                    <label>Email</label>
+
+                    <input type="checkbox" value="phone" onChange={this.updateContacts} checked={this.state.contacts.includes('phone')}/>
+                    <label>Phone</label>
+
+                    <input type="checkbox" value="slow-mail" onChange={this.updateContacts} checked={this.state.contacts.includes('slow-mail')}/>
+                    <label>Slow mail</label>
                 </div>
+                <button disabled={!this.state.name || !this.state.email || !this.state.color || !this.state.country || this.state.fruits.length === 0 || this.state.contacts.length === 0 }>Submit</button>
             </div>
         )
     }
