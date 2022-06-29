@@ -1,5 +1,5 @@
-import React from 'react';
-import ContactForm from './ContactForm';
+import React from 'react'
+import ContactForm from './ContactForm'
 
 export default function App() {
   return (
@@ -7,6 +7,5 @@ export default function App() {
       <h1>Customer Support Form</h1>
       <ContactForm/>
     </div>
-  );
+  )
 }
-

@@ -1,0 +1,13 @@
+
+{
+    display:'Outdoors',
+    value:'outdoors'
+},
+{
+    display:'Indoors',
+    value:'indoors'
+},
+{
+    display:'VIP Indoors',
+    value:'vip-indoors'
+}
