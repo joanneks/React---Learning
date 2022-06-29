@@ -1,19 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-export default class ContactForm extends React.Component {
-    //to load data
-    async componentDidMount(){
-        let enquiryResponse = await axios.get('./enquiry.json');
-        let countriesResponse = await axios.get('./countries.json');
-        let contactsResponse = await axios.get('./contacts.json')
-        this.setState({
-            allEnquiries:enquiryResponse.data,
-            allCountries:countriesResponse.data,
-            allContacts: contactsResponse.data
-        })
-    }
-    
+export default class ContactForm extends React.Component {    
     // the state variables are the data that component has responsbility for
     // make sure that there are no derived values
     state = {
@@ -24,7 +12,35 @@ export default class ContactForm extends React.Component {
         contacts:[],
         allEnquiries:[],
         allCountries:[],
-        allContacts:[]
+        allContacts:[],
+        loaded:false
+    }
+    
+    //to load data in sequence. await means to wait for the current request to finish before going to the next request
+    // async componentDidMount(){
+    //     let enquiryResponse = await axios.get('./enquiry.json');
+    //     let countriesResponse = await axios.get('./countries.json');
+    //     let contactsResponse = await axios.get('./contacts.json');
+    //     this.setState({
+    //         allEnquiries:enquiryResponse.data,
+    //         allCountries:countriesResponse.data,
+    //         allContacts: contactsResponse.data
+    //     })
+    // }
+
+    //to load data concurrently, at most few ms different
+    async componentDidMount(){
+        let contactRequest = axios.get('./contacts.json');
+        let enquiryRequest = axios.get('./enquiry.json');
+        let countryRequest = axios.get('./countries.json');
+        let [contactResponse, enquiryResponse, countryResponse] 
+            = await axios.all([contactRequest, enquiryRequest, countryRequest]);
+        this.setState({
+            'allCountries': countryResponse.data,
+            'allEnquiries': enquiryResponse.data,
+            'allContacts': contactResponse.data,
+            'loaded':true
+        })
     }
 
     // make sure event handlers (i.e functions that are called in response to an event happening)
@@ -86,98 +102,104 @@ export default class ContactForm extends React.Component {
     }
 
     render() {
-        // 1. make sure do not call setState in the render function
-        // under any circumistances
-        // 2. derived values should go into render
-        return (<div>
-                    <div>
-                        <label>First Name:</label>
-                        <input type="text" 
-                               value={this.state.firstName}
-                               onChange={this.updateFirstName}
-                        />
-                    </div>
-                    <div>
-                        <label>Last Name:</label>
-                        <input type="text"
-                               value={this.state.lastName}
-                               onChange={this.updateLastName}
-                            
-                        />
-                    </div>
-                    <div>
-                        <label>Type of enquiry</label>
-                        {
-                            this.state.allEnquiries.map(each=>
-                                <React.Fragment key={each.value}>
-                                    <input type="radio"
-                                        name="support"
-                                        value="each.value"
-                                        onChange={this.updateEnquiry}
-                                        checked={this.state.enquiry === each.value}
-                                        />
-                                        <label>{each.display}</label>
-                                </React.Fragment>
-                        )}
-                        {/* <input type="radio"
-                               name="enquiry"
-                               value="support"
-                               onChange={this.updateEnquiry}
-                               checked={this.state.enquiry === "support"}
-                               />
-                        <label>Support</label>
+        if (this.state.loaded===true){
 
-                        <input type="radio"
-                               name="enquiry"
-                               value="sales"
-                               onChange={this.updateEnquiry}
-                               checked={this.state.enquiry==='sales'}
-                               />
-                        <label>Sales</label>
-
-                        <input type="radio"
-                               name="enquiry"
-                               value="marketing"
-                               onChange={this.updateEnquiry}
-                               checked={this.state.enquiry==='marketing'}
-                               />
-                        <label>Marketing</label> */}
-                    </div>
-
-                    <div>
-                        <select value={this.state.country} onChange={this.updateCountry}>
+            // 1. make sure do not call setState in the render function
+            // under any circumistances
+            // 2. derived values should go into render
+            return (<div>
+                        <div>
+                            <label>First Name:</label>
+                            <input type="text" 
+                                   value={this.state.firstName}
+                                   onChange={this.updateFirstName}
+                            />
+                        </div>
+                        <div>
+                            <label>Last Name:</label>
+                            <input type="text"
+                                   value={this.state.lastName}
+                                   onChange={this.updateLastName}
+                                
+                            />
+                        </div>
+                        <div>
+                            <label>Type of enquiry</label>
                             {
-                                this.state.allCountries.map(each=>
-                                    <React.Fragment key={each.display}>
-                                        <option value={each.value}>{each.display}</option>
+                                this.state.allEnquiries.map(each=>
+                                    <React.Fragment key={each.value}>
+                                        <input type="radio"
+                                            name={each.value}
+                                            value={each.value}
+                                            onChange={this.updateEnquiry}
+                                            checked={this.state.enquiry === each.value}
+                                            />
+                                            <label>{each.display}</label>
+                                    </React.Fragment>
+                            )}
+                            {/* <input type="radio"
+                                   name="enquiry"
+                                   value="support"
+                                   onChange={this.updateEnquiry}
+                                   checked={this.state.enquiry === "support"}
+                                   />
+                            <label>Support</label>
+    
+                            <input type="radio"
+                                   name="enquiry"
+                                   value="sales"
+                                   onChange={this.updateEnquiry}
+                                   checked={this.state.enquiry==='sales'}
+                                   />
+                            <label>Sales</label>
+    
+                            <input type="radio"
+                                   name="enquiry"
+                                   value="marketing"
+                                   onChange={this.updateEnquiry}
+                                   checked={this.state.enquiry==='marketing'}
+                                   />
+                            <label>Marketing</label> */}
+                        </div>
+    
+                        <div>
+                            <select value={this.state.country} onChange={this.updateCountry}>
+                                {
+                                    this.state.allCountries.map(each=>
+                                        <React.Fragment key={each.display}>
+                                            <option value={each.value}>{each.display}</option>
+                                        </React.Fragment>
+                                    )
+                                }
+                                {/* <option value="singapore">Singapore</option>
+                                <option value="thailand">Thailand</option>
+                                <option value="laos">Laos</option>
+                                <option value="cambodia">Cambodia</option> */}
+                            </select>
+                        </div>
+                            
+                        <div>
+                            {
+                                this.state.allContacts.map( each=>
+                                    <React.Fragment key={each.value}>
+                                        <input type="checkbox" value={each.value} onChange={this.updateContacts} checked={this.state.contacts.includes(each.value)}/>
+                                        <label>{each.display}</label>
                                     </React.Fragment>
                                 )
                             }
-                            {/* <option value="singapore">Singapore</option>
-                            <option value="thailand">Thailand</option>
-                            <option value="laos">Laos</option>
-                            <option value="cambodia">Cambodia</option> */}
-                        </select>
-                    </div>
-                        
-                    <div>
-                        {
-                            this.state.allContacts.map( each=>
-                                <React.Fragment key={each.value}>
-                                    <input type="checkbox" value={each.value} onChange={this.updateContacts} checked={this.state.contacts.includes(each.value)}/>
-                                    <label>{each.display}</label>
-                                </React.Fragment>
-                            )
-                        }
-                        {/* <input type="checkbox" value="email" onChange={this.updateContacts} checked={this.state.contacts.includes('email')}/>
-                        <label>Email</label>
+                            {/* <input type="checkbox" value="email" onChange={this.updateContacts} checked={this.state.contacts.includes('email')}/>
+                            <label>Email</label>
+    
+                            <input type="checkbox" value="phone" onChange={this.updateContacts} checked={this.state.contacts.includes('phone')}/>
+                            <label>Phone</label>
+    
+                            <input type="checkbox" value="slow-mail" onChange={this.updateContacts} checked={this.state.contacts.includes('slow-mail')}/>
+                            <label>Slow mail</label> */}
+                        </div>
+                </div>)
+        }else {
+            return <p>Please wait, loading...</p>
+        }
 
-                        <input type="checkbox" value="phone" onChange={this.updateContacts} checked={this.state.contacts.includes('phone')}/>
-                        <label>Phone</label>
-
-                        <input type="checkbox" value="slow-mail" onChange={this.updateContacts} checked={this.state.contacts.includes('slow-mail')}/>
-                        <label>Slow mail</label> */}
-                    </div>
-            </div>)
     }
 }
