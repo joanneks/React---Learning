@@ -4,9 +4,9 @@ import axios from 'axios'
 export default class SurveyForm extends React.Component {
 
    async componentDidMount() {
-      let fruitResponse = await axios.get('/fruits.json');
-      let colorResponse = await axios.get('/colors.json');
-      let countryResponse = await axios.get('/countries.json');
+      let fruitResponse = await axios.get('./fruits.json');
+      let colorResponse = await axios.get('./colors.json');
+      let countryResponse = await axios.get('./countries.json');
       this.setState({
         'allFruits': fruitResponse.data,
         'allColors':colorResponse.data,
@@ -166,21 +166,24 @@ export default class SurveyForm extends React.Component {
                     <div>
                         <label>Country</label>
                         <select className="form-control" value={this.state.country} onChange={this.updateCountry}>
-                            {this.state.allCountries.map( c =><option value={c.value} key={c.value}>
+                            {this.state.allCountries.map( c =>
+                                <option value={c.value} key={c.value}>
                                 {c.display}
-                            </option>)}
+                                </option>
+                            )}
     
                         </select>
                     </div>
                     <div>
                         <label>Fruits</label>
                         {
-                            this.state.allFruits.map( f =>
+                            this.state.allFruits.map( (f)=>
                             <React.Fragment key={f.value}>
-                          
                                 <input type="checkbox" onChange={this.updateFruits} className="form-check-input" name="fruits" value={f.value} />
                                 <label className="form-check-label">{f.display}</label>
-                            </React.Fragment>)
+                            </React.Fragment>
+
+                            )
                         }
     
                       
