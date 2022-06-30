@@ -27,19 +27,26 @@ export default class BudgetTracker extends React.Component {
         ],
         date:'',
         description:'',
-        categories:'',
-        amount:''
+        categories:'Transport',
+        amount:'',
+        expenseBeingEdited:null
     }
     updateFormField =(event)=>{
         this.setState({
             [event.target.name] : event.target.value
         })
     }
+    beginEdit=(each)=>{
+        this.setState({
+            expenseBeingEdited:each
 
-    renderExpenseList (){
+        })
+    }
+    
+    renderExpenseList =(each)=>{
+        
         return(
-            this.state.expenses.map((each)=>
-            <React.Fragment key={each._id}>
+            this.state.expenseBeingEdited === null || this.state.expenseBeingEdited._id !== each._id ?
                 <div className="container mt-3">
                     <div className="border border-1 border-dark">
                         <h4 className="mt-2 ms-3">Expense Id: {each._id}</h4>
@@ -49,10 +56,49 @@ export default class BudgetTracker extends React.Component {
                             <li className="mt-3 ms-3">Category: {each.categories}</li>
                             <li className="mt-3 ms-3">Amount:{each.amount}</li>
                         </ul>
+                        <div className='ms-3 mb-3'>
+                            <button className='btn btn-primary' onClick={ ()=>{this.beginEdit(each)} }>Edit</button>
+                            <button className='btn btn-danger'>Delete</button>
+                        </div>
                     </div>
                 </div>
-            </React.Fragment>
-            )
+                :
+                <div className="container mt-3">
+                    <div className="border border-1 border-dark">
+                        <p>expense is being edited</p>
+                    </div>
+                </div>
+        )
+    }
+    renderAddExpense(){
+        return(
+            <div className="container mt-3">
+                <h2>Add New Expense</h2>
+                <div className="mt-3 ms-3">
+                    <label>Date: </label>
+                    <input type="text" className="ms-3" name="date" value={this.state.date} onChange={this.updateFormField}/>
+                </div>
+                <div className="mt-3 ms-3">
+                    <label>Expense Description: </label>
+                    <input type="text" className="ms-3" name="description" value={this.state.description} onChange={this.updateFormField}/>
+                </div>
+                <div className="mt-3 ms-3">
+                    <label>Category: </label>
+                    <select className="form-select ms-3" name="categories" value={this.state.categories} onChange={this.updateFormField}>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Food">Food</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Loans">Loans</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div className="mt-3 ms-3">
+                    <label>Amount: </label>
+                    <input type="text" className="ms-3" name="amount" value={this.state.amount} onChange={this.updateFormField}/>
+                </div>
+                <button className="btn btn-primary mt-3 ms-3" onClick={this.addExpense}>Add Expense</button>
+            </div>
         )
     }
     addExpense=()=>{
@@ -76,38 +122,18 @@ export default class BudgetTracker extends React.Component {
         return (
             <React.Fragment>
                 <div>
-                    {this.renderExpenseList()}
+                    {
+                        this.state.expenses.map((each)=>
+                        <React.Fragment key={each._id}>
+                            {this.renderExpenseList(each)}
+                        </React.Fragment>
+                        )
+                    }
                 </div>
-                <div className="container mt-3">
-                    <h2>Add New Expense</h2>
-                    <div className="mt-3 ms-3">
-                        <label>Date: </label>
-                        <input type="text" className="ms-3" name="date" value={this.state.date} onChange={this.updateFormField}/>
-                    </div>
-                    <div className="mt-3 ms-3">
-                        <label>Expense Description: </label>
-                        <input type="text" className="ms-3" name="description" value={this.state.description} onChange={this.updateFormField}/>
-                    </div>
-                    <div className="mt-3 ms-3">
-                        <label>Category: </label>
-                        <select className="form-select ms-3" name="categories" value={this.state.categories} onChange={this.updateFormField}>
-                            <option value="transport">Transport</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="food">Food</option>
-                            <option value="bills">Bills</option>
-                            <option value="loans">Loans</option>
-                            <option value="others">Others</option>
-                        </select>
-                    </div>
-                    <div className="mt-3 ms-3">
-                        <label>Amount: </label>
-                        <input type="text" className="ms-3" name="amount" value={this.state.amount} onChange={this.updateFormField}/>
-                    </div>
-                    <button className="btn btn-primary mt-3 ms-3" onClick={this.addExpense}>Add Expense</button>
-
-
-
+                <div>
+                    {this.renderAddExpense()}
                 </div>
+                
             </React.Fragment>
         )
     }
