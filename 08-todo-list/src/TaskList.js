@@ -109,10 +109,29 @@ export default class TaskList extends React.Component {
                     }}
 
                 >Edit</button>
+                <button className="ms-3 btn btn-danger btn-sm" onClick={()=>{this.deleteTask(task)}}
+                >Delete</button>
+                
             </li>
         )
     }
 
+    deleteTask = (task) =>{
+    
+        // let index = this.state.tasks.findIndex( t => t._id === task._id);
+        let index=this.state.tasks.findIndex(function (t){
+            if (task._id === t._id){
+                return true
+            } else{
+                return false
+            }
+        })
+        const cloned = [...this.state.tasks.slice(0,index), ...this.state.tasks.slice(index+1)]
+        this.setState({
+            tasks:cloned
+        })
+    }
+    
     displayEditTask = (task) =>{
         return (<li className="mt-3">
            <input type="text" name="modifiedTaskName" value={this.state.modifiedTaskName} onChange={this.updateFormField}/>
